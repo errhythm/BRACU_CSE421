@@ -26,3 +26,5 @@ R1(config-if)#interface serial 0/0/0
 R1(config-if)#ip address 192.168.2.1 255.255.255.0 
 R1(config-if)#clock rate 64000 
 R1(config-if)#no shutdown
+R1(config-if)#end
+R1#copy running-config startup-config
