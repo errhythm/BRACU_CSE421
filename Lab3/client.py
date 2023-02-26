@@ -1,38 +1,49 @@
 import socket
 
-HEADER=16
-PORT=5050
+HEADER = 16
+PORT = 5050
 
 # IP Address of the server
-CLIENTSERVER=socket.gethostbyname(socket.gethostname())
+CLIENTSERVER = socket.gethostbyname(socket.gethostname())
 
 # Bind the address
-ADDR=(CLIENTSERVER, PORT)
-FORMAT="utf8"
+ADDR = (CLIENTSERVER, PORT)
+FORMAT = "utf8"
 
 # Will disconnect if typed "End"
-DISCONNECT_MSG="End"
+DISCONNECT_MSG = "End"
 
 # Generating the server
-client=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 client.connect(ADDR)
 
 
 def send(msg):
-    message=msg.encode(FORMAT)
-    msg_length=len(message)
-    send_length=str(msg_length).encode(FORMAT)
+    message = msg.encode(FORMAT)
+    msg_length = len(message)
+    send_length = str(msg_length).encode(FORMAT)
     # Finding the remaining length
-    send_length+=b' '*(HEADER-len(send_length))
-    
+    send_length += b' ' * (HEADER - len(send_length))
+
     client.send(send_length)
     client.send(message)
     print(client.recv(2048).decode(FORMAT))
-    
 
-#Task 1
-send(f"Client's IP Address is: {CLIENTSERVER} and Device name is: {socket.gethostname()}")
-send(DISCONNECT_MSG)
 
-   
+# Start Task 1
+# send(f"Client's IP Address is: {CLIENTSERVER} and Device name is: {socket.gethostname()}")
+# send(DISCONNECT_MSG)
+# End of Task 1
+
+# Start Task 2
+connected = True
+while connected:
+    s = input("Please enter word:")
+
+    if s == "Done":
+        send(DISCONNECT_MSG)
+        connected = False
+    else:
+        send(s)
+# End of Task 2
