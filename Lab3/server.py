@@ -51,6 +51,7 @@ def handleClients(conn, addr):
                     conn.send("Too many vowels".encode(FORMAT))
     conn.close()
 
+
 def start():
     server.listen()
     print("Server is Listening")
@@ -58,9 +59,7 @@ def start():
         conn, addr = server.accept()
         thread = threading.Thread(target=handleClients, args=(conn, addr))
         thread.start()
-        print("Total Client's", threading.active_count()-1)
+        print("Total Client's", threading.active_count() - 1)
+
 
 start()
-
-
-
