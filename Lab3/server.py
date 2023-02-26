@@ -1,4 +1,5 @@
 import socket
+import threading
 
 HEADER = 16
 PORT = 5050
@@ -18,39 +19,48 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 server.bind(ADDR)
 
-server.listen()
 
-print("Server is Listening")
+def handleClients(conn, addr):
+    connected = True
 
-conn, addr = server.accept()
+    while connected:
+        msg_length = conn.recv(HEADER).decode(FORMAT)
 
-connected = True
+        if msg_length:
+            msg_length = int(msg_length)
+            msg = conn.recv(msg_length).decode(FORMAT)
 
-while connected:
-    msg_length = conn.recv(HEADER).decode(FORMAT)
-
-    if msg_length:
-        msg_length = int(msg_length)
-        msg = conn.recv(msg_length).decode(FORMAT)
-
-        if msg == DISCONNECT_MSG:
-            connected = False
-            conn.send("GoodBye".encode(FORMAT))
-        else:
-            # Task 1
-            # print(msg)
-            # conn.send("Message Received".encode(FORMAT))
-            # Task 2
-            vowels = "aeiouAEIOU"
-            count = 0
-            for i in msg:
-                if i in vowels:
-                    count += 1
-            if count == 0:
-                conn.send("Not Enough Vowels".encode(FORMAT))
-            elif count <= 2:
-                conn.send("Enough vowels I guess".encode(FORMAT))
+            if msg == DISCONNECT_MSG:
+                connected = False
+                conn.send("GoodBye".encode(FORMAT))
             else:
-                conn.send("Too many vowels".encode(FORMAT))
+                # Task 1
+                # print(msg)
+                # conn.send("Message Received".encode(FORMAT))
+                # Task 2
+                vowels = "aeiouAEIOU"
+                count = 0
+                for i in msg:
+                    if i in vowels:
+                        count += 1
+                if count == 0:
+                    conn.send("Not Enough Vowels".encode(FORMAT))
+                elif count <= 2:
+                    conn.send("Enough vowels I guess".encode(FORMAT))
+                else:
+                    conn.send("Too many vowels".encode(FORMAT))
+    conn.close()
 
-conn.close()
+def start():
+    server.listen()
+    print("Server is Listening")
+    while True:
+        conn, addr = server.accept()
+        thread = threading.Thread(target=handleClients, args=(conn, addr))
+        thread.start()
+        print("Total Client's", threading.active_count()-1)
+
+start()
+
+
+
