@@ -36,10 +36,10 @@ while connected:
         
         if msg==DISCONNECT_MSG:
             connected=False
-            conn.send("GoodBye").encode(FORMAT)
+            conn.send("GoodBye".encode(FORMAT))
         else:
             print(msg)
-            conn.send("Message Received").encode(FORMAT)
+            conn.send("Message Received".encode(FORMAT))
                         
 conn.close()
         
